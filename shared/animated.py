@@ -18,13 +18,14 @@ class Animated(pygame.sprite.Sprite):
         size: Coordinate,
         flipped: bool = False,
         fps: int = 24,
+        scale: int = 2,
     ):
         """Inicializa la clase Animated"""
         super().__init__()
-        self.rect = pygame.Rect(center, tuple(s * 2 for s in size))
+        self.rect = pygame.Rect(center, tuple(s * scale for s in size))
         self.rect.center = self.rect.topleft
         self.animation_count = 0
-        self.sprites = load_sprites(directory, size, flipped)
+        self.sprites = load_sprites(directory, size, flipped, scale)
         self._sprite = self.sprites.keys().__iter__().__next__()
         self.update_mask()
         self.fps = fps

@@ -14,7 +14,7 @@ def flip(sprites: tuple[pygame.Surface, ...]) -> tuple[pygame.Surface, ...]:
 
 
 def get_sprites(
-    sprite_sheet: pygame.Surface, size: Coordinate
+    sprite_sheet: pygame.Surface, size: Coordinate, scale: int
 ) -> tuple[pygame.Surface, ...]:
     """Obtiene los sprites de un sprite sheet"""
     sprites = []
@@ -23,13 +23,13 @@ def get_sprites(
         surface = pygame.Surface(size, pygame.SRCALPHA, 32)
         rect = pygame.Rect(i, 0, size[0], size[1])
         surface.blit(sprite_sheet, (0, 0), rect)
-        sprites.append(pygame.transform.scale2x(surface))
+        sprites.append(pygame.transform.scale_by(surface, scale))
 
     return tuple(sprites)
 
 
 def load_sprites(
-    directory: str, size: Coordinate, flipped: bool = False
+    directory: str, size: Coordinate, flipped: bool = False, scale: int = 2
 ) -> dict[str, tuple[pygame.Surface, ...]]:
     """Carga los sprites de un directorio"""
     path = join("images", directory)
@@ -40,7 +40,7 @@ def load_sprites(
     for image in images:
         sprite_sheet = pygame.image.load(join(path, image)).convert_alpha()
 
-        sprites = get_sprites(sprite_sheet, size)
+        sprites = get_sprites(sprite_sheet, size, scale)
         name = image.replace(".png", "")
 
         if flipped:
