@@ -47,6 +47,6 @@ def load_sprites(
             all_sprites[name + "_right"] = sprites
             all_sprites[name + "_left"] = flip(sprites)
         else:
-            all_sprites[name] = sprites
+            all_sprites[name] = flip(sprites)
 
     return all_sprites
