@@ -13,7 +13,8 @@ import pygame
 
 from shared import Animated, BLACK, FPS
 
-WIDTH, HEIGHT = 768, 640
+TILE_SIZE = 96
+WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
 
 pygame.init()
 
