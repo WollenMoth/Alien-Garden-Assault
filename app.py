@@ -11,7 +11,7 @@ Autores:
 
 import pygame
 
-from shared import BLACK, FPS
+from shared import Animated, BLACK, FPS
 
 WIDTH, HEIGHT = 768, 640
 
@@ -22,9 +22,12 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Alien Garden Assault")
 
 
-def draw() -> None:
+def draw(objects: list[Animated]) -> None:
     """Dibuja todos los elementos en la pantalla"""
     screen.fill(BLACK)
+
+    for obj in objects:
+        obj.draw(screen)
 
     pygame.display.flip()
 
@@ -38,7 +41,7 @@ def main() -> None:
     while running:
         clock.tick(FPS)
 
-        draw()
+        draw([])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
