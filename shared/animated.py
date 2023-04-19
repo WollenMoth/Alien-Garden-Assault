@@ -2,13 +2,14 @@
 
 import pygame
 
+from .drawable import Drawable
 from .sprites import load_sprites
 from .types import Coordinate
 
 FPS = 24
 
 
-class Animated(pygame.sprite.Sprite):
+class Animated(pygame.sprite.Sprite, Drawable):
     """Clase que representa un sprite animado"""
 
     def __init__(

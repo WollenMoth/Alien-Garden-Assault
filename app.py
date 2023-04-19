@@ -11,7 +11,7 @@ Autores:
 
 import pygame
 
-from shared import Animated, BLACK, FPS
+from shared import Background, Drawable, BLACK, FPS
 
 TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
@@ -23,7 +23,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Alien Garden Assault")
 
 
-def draw(objects: list[Animated]) -> None:
+def draw(objects: list[Drawable]) -> None:
     """Dibuja todos los elementos en la pantalla"""
     screen.fill(BLACK)
 
@@ -39,10 +39,12 @@ def main() -> None:
 
     clock = pygame.time.Clock()
 
+    background = Background((TILE_SIZE, TILE_SIZE))
+
     while running:
         clock.tick(FPS)
 
-        draw([])
+        draw([background])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
