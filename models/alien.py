@@ -11,3 +11,7 @@ class Alien(Animated):
         super().__init__(center, directory, size, fps=8, scale=scale)
 
         self.sprite = random.choice(list(self.sprites.keys()))
+
+    def move(self, speed) -> None:
+        """Mueve el alien a la izquierda"""
+        self.rect.x -= speed
