@@ -40,15 +40,38 @@ def draw(objects: list[Drawable]) -> None:
     pygame.display.flip()
 
 
-def handle_movement(cannon: Cannon, aliens: list[Alien]) -> None:
+def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> None:
     """Maneja el movimiento del cañón"""
     pos = pygame.mouse.get_pos()
     angle = math.atan2(*(pos[i] - cannon.center[i] for i in [1, 0]))
 
     cannon.move(angle)
 
+    for ball in balls:
+        ball.move()
+
+    aliens_to_remove = []
+
     for alien in aliens:
         alien.move(SPEED)
+
+        balls_to_remove = []
+
+        for ball in balls:
+            offset = (ball.center[0] - alien.rect.x,
+                      ball.center[1] - alien.rect.y)
+            if alien.mask.overlap_area(ball.mask, offset):
+                alien.receive_damage()
+                balls_to_remove.append(ball)
+
+                if alien.health <= 0:
+                    aliens_to_remove.append(alien)
+
+        for ball in balls_to_remove:
+            balls.remove(ball)
+
+    for alien in aliens_to_remove:
+        aliens.remove(alien)
 
 
 def handle_shooting(cannon: Cannon, balls: list[Ball], last_pressed: bool) -> bool:
@@ -65,13 +88,25 @@ def generate_aliens() -> list[Alien]:
     """Genera una oleada de aliens aleatorios al final del jardín"""
     types = (Pawn, Knight, Boss)
     types_prob = (0.6, 0.3, 0.1)
+    healths = (1, 3, 5)
 
     selection = random.choices(types, types_prob, k=HEIGHT // TILE_SIZE)
 
     x = WIDTH - TILE_SIZE // 2
     y = TILE_SIZE // 2
 
-    return [t((x, TILE_SIZE * i + y)) for i, t in enumerate(selection) if random.random() < 0.5]
+    aliens = []
+
+    for i, alien_type in enumerate(selection):
+        if random.random() < 0.5:
+            continue
+
+        center = (x, y + i * TILE_SIZE)
+        health = healths[types.index(alien_type)]
+
+        aliens.append(alien_type(center, health))
+
+    return aliens
 
 
 def main() -> None:
@@ -97,7 +132,7 @@ def main() -> None:
 
         draw([background, cannon, *balls, *aliens])
 
-        handle_movement(cannon, aliens)
+        handle_movement(cannon, balls, aliens)
 
         last_pressed = handle_shooting(cannon, balls, last_pressed)
 

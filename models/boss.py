@@ -9,6 +9,6 @@ SPRITE_SIZE = (32, 32)
 class Boss(Alien):
     """Clase que representa un Boss"""
 
-    def __init__(self, center: Coordinate):
+    def __init__(self, center: Coordinate, health: int):
         """Inicializa la clase Boss"""
-        super().__init__(center, "bosses", SPRITE_SIZE)
+        super().__init__(center, health, "bosses", SPRITE_SIZE)

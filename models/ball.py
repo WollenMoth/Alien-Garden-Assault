@@ -34,7 +34,6 @@ class Ball(Drawable):
     def draw(self, screen: pygame.Surface) -> None:
         """Dibuja la bola en la pantalla."""
         pygame.draw.circle(screen, self.color, self.center, self.radius)
-        self.move()
 
     def move(self) -> None:
         """Mueve la bola en función del ángulo y la velocidad de la misma."""
