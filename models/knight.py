@@ -1,16 +1,14 @@
 """Módulo que contiene la clase Knight"""
 
-import random
-from shared import Animated, Coordinate
+from shared import Coordinate
+from .alien import Alien
 
 SPRITE_SIZE = (16, 16)
 
 
-class Knight(Animated):
+class Knight(Alien):
     """Clase que representa un Knight"""
 
     def __init__(self, center: Coordinate):
         """Inicializa la clase Knight"""
-        super().__init__(center, "knights", SPRITE_SIZE, fps=8, scale=4)
-
-        self.sprite = random.choice(list(self.sprites.keys()))
+        super().__init__(center, "knights", SPRITE_SIZE, scale=4)
