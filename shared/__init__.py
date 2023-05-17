@@ -4,5 +4,6 @@ from .animated import *
 from .background import *
 from .colors import *
 from .drawable import *
+from .sound import *
 from .sprites import *
 from .types import *

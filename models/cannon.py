@@ -4,7 +4,7 @@ import math
 
 import pygame
 
-from shared import ORANGE, YELLOW, Coordinate, Drawable
+from shared import ORANGE, YELLOW, Coordinate, Drawable, load_sounds
 
 from .ball import Ball
 
@@ -32,6 +32,7 @@ class Cannon(Drawable):
         self.width = CANNON_WIDTH
         self.height = CANNON_HEIGHT
         self.line_color = LINE_COLOR
+        self.sounds = load_sounds("cannon")
 
     def get_end(self) -> Coordinate:
         """Calcula el extremo del cañón en función del ángulo actual.
@@ -60,4 +61,5 @@ class Cannon(Drawable):
 
     def shoot(self) -> Ball:
         """Crea una nueva bola y la devuelve si hay bolas disponibles."""
+        self.sounds["shoot"].play()
         return Ball(self.get_end(), self.angle)
