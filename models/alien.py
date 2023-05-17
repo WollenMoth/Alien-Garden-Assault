@@ -4,6 +4,8 @@ import random
 
 from shared import Animated, Coordinate
 
+from .stats import Stats
+
 
 class Alien(Animated):
     """Clase que representa un alien"""
@@ -11,7 +13,7 @@ class Alien(Animated):
     def __init__(
         self,
         center: Coordinate,
-        health: int,
+        stats: Stats,
         directory,
         size: Coordinate,
         scale: int = 3,
@@ -20,11 +22,31 @@ class Alien(Animated):
         super().__init__(center, directory, size, fps=8, scale=scale)
 
         self.sprite = random.choice(list(self.sprites.keys()))
-        self.health = health
+        self.stats = stats
 
-    def move(self, speed) -> None:
+    @property
+    def health(self) -> int:
+        """Getter de la vida"""
+        return self.stats.health
+
+    @health.setter
+    def health(self, value: int) -> None:
+        """Setter de la vida"""
+        self.stats.health = value
+
+    @property
+    def speed(self) -> int:
+        """Getter de la velocidad"""
+        return self.stats.speed
+
+    @property
+    def prob(self) -> float:
+        """Getter de la probabilidad"""
+        return self.stats.prob
+
+    def move(self) -> None:
         """Mueve el alien a la izquierda"""
-        self.rect.x -= speed
+        self.rect.x -= self.speed
 
     def receive_damage(self) -> None:
         """Recibe daño"""

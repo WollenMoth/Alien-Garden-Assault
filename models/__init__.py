@@ -6,3 +6,4 @@ from .boss import *
 from .cannon import *
 from .knight import *
 from .pawn import *
+from .stats import *

@@ -3,6 +3,7 @@
 from shared import Coordinate
 
 from .alien import Alien
+from .stats import Stats
 
 SPRITE_SIZE = (16, 16)
 
@@ -10,6 +11,6 @@ SPRITE_SIZE = (16, 16)
 class Knight(Alien):
     """Clase que representa un Knight"""
 
-    def __init__(self, center: Coordinate, health: int):
+    def __init__(self, center: Coordinate, stats: Stats):
         """Inicializa la clase Knight"""
-        super().__init__(center, health, "knights", SPRITE_SIZE, scale=4)
+        super().__init__(center, stats, "knights", SPRITE_SIZE, scale=4)

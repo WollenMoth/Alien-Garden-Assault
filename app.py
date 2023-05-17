@@ -14,14 +14,18 @@ import random
 
 import pygame
 
-from models import Alien, Ball, Boss, Cannon, Knight, Pawn
+from models import Alien, Ball, Boss, Cannon, Knight, Pawn, Stats
 from shared import BLACK, FPS, Background, Drawable
 
 TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
 
 SPAWN_DELAY = 5000
-SPEED = 3
+TYPES = {
+    Pawn: Stats(1, 3, 0.6),
+    Knight: Stats(3, 2, 0.3),
+    Boss: Stats(5, 1, 0.1),
+}
 
 pygame.init()
 
@@ -53,7 +57,7 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
     aliens_to_remove = []
 
     for alien in aliens:
-        alien.move(SPEED)
+        alien.move()
 
         balls_to_remove = []
 
@@ -85,9 +89,8 @@ def handle_shooting(cannon: Cannon, balls: list[Ball], last_pressed: bool) -> bo
 
 def generate_aliens() -> list[Alien]:
     """Genera una oleada de aliens aleatorios al final del jardín"""
-    types = (Pawn, Knight, Boss)
-    types_prob = (0.6, 0.3, 0.1)
-    healths = (1, 3, 5)
+    types = list(TYPES.keys())
+    types_prob = [TYPES[t].prob for t in types]
 
     selection = random.choices(types, types_prob, k=HEIGHT // TILE_SIZE)
 
@@ -101,9 +104,8 @@ def generate_aliens() -> list[Alien]:
             continue
 
         center = (x, y + i * TILE_SIZE)
-        health = healths[types.index(alien_type)]
 
-        aliens.append(alien_type(center, health))
+        aliens.append(alien_type(center, TYPES[alien_type]))
 
     return aliens
 
