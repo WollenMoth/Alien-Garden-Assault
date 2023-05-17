@@ -54,21 +54,21 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
     for ball in balls:
         ball.move()
 
-    aliens_to_remove = []
+    aliens_to_remove = set()
 
     for alien in aliens:
         alien.move()
 
-        balls_to_remove = []
+        balls_to_remove = set()
 
         for ball in balls:
             offset = (ball.center[0] - alien.rect.x, ball.center[1] - alien.rect.y)
             if alien.mask.overlap_area(ball.mask, offset):
                 alien.receive_damage()
-                balls_to_remove.append(ball)
+                balls_to_remove.add(ball)
 
                 if alien.health <= 0:
-                    aliens_to_remove.append(alien)
+                    aliens_to_remove.add(alien)
 
         for ball in balls_to_remove:
             balls.remove(ball)
