@@ -21,6 +21,8 @@ TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
 
 SPAWN_DELAY = 5000
+SPAWN_NUMBER = 4
+SPAWN_PROB = 0.5
 TYPES = {
     Pawn: Stats(1, 3, 0.6),
     Knight: Stats(3, 2, 0.3),
@@ -100,7 +102,7 @@ def generate_aliens() -> list[Alien]:
     aliens = []
 
     for i, alien_type in enumerate(selection):
-        if random.random() < 0.5:
+        if random.random() > SPAWN_PROB:
             continue
 
         center = (x, y + i * TILE_SIZE)
@@ -108,6 +110,26 @@ def generate_aliens() -> list[Alien]:
         aliens.append(alien_type(center, TYPES[alien_type]))
 
     return aliens
+
+
+def start_round() -> None:
+    """Comienza una nueva ronda"""
+    pygame.time.set_timer(pygame.USEREVENT, SPAWN_DELAY, SPAWN_NUMBER)
+    pygame.time.set_timer(pygame.USEREVENT + 1, SPAWN_DELAY * SPAWN_NUMBER)
+
+
+def increase_difficulty() -> None:
+    """Aumenta la dificultad del juego"""
+    globals()["SPAWN_DELAY"] = max(500, SPAWN_DELAY - 100)
+    globals()["SPAWN_NUMBER"] = min(50, SPAWN_NUMBER + 1)
+    globals()["SPAWN_PROB"] = min(1, SPAWN_PROB + 0.05)
+
+    for stats in TYPES.values():
+        stats.health = min(100, stats.health * 1.1)
+        stats.speed = min(10, stats.speed * 1.1)
+        stats.prob = max(0.05, stats.prob - 0.02)
+
+    TYPES[Boss].prob = 1 - sum(s.prob for t, s in TYPES.items() if t != Boss)
 
 
 def main() -> None:
@@ -126,7 +148,8 @@ def main() -> None:
 
     last_pressed = False
 
-    pygame.time.set_timer(pygame.USEREVENT, SPAWN_DELAY)
+    start_round()
+    spawns_finished = False
 
     while running:
         clock.tick(FPS)
@@ -137,9 +160,16 @@ def main() -> None:
 
         last_pressed = handle_shooting(cannon, balls, last_pressed)
 
+        if spawns_finished and not aliens:
+            increase_difficulty()
+            start_round()
+            spawns_finished = False
+
         for event in pygame.event.get():
             if event.type == pygame.USEREVENT:
                 aliens.extend(generate_aliens())
+            elif event.type == pygame.USEREVENT + 1:
+                spawns_finished = True
             elif event.type == pygame.QUIT:
                 running = False
                 break

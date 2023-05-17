@@ -4,7 +4,7 @@
 class Stats:
     """Clase que contiene las estadísticas de un Alien"""
 
-    def __init__(self, health: int, speed: int, prob: float):
+    def __init__(self, health: float, speed: float, prob: float):
         """Inicializa la clase Stats"""
         self.health = health
         self.speed = speed

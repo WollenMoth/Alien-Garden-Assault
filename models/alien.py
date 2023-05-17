@@ -27,7 +27,7 @@ class Alien(Animated):
 
     def move(self) -> None:
         """Mueve el alien a la izquierda"""
-        self.rect.x -= self.speed
+        self.rect.x -= int(self.speed)
 
     def receive_damage(self) -> None:
         """Recibe daño"""
