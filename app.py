@@ -53,15 +53,18 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
 
     cannon.move(angle)
 
+    screen_rect = screen.get_rect()
+    balls_to_remove = set()
+    aliens_to_remove = set()
+
     for ball in balls:
         ball.move()
-
-    aliens_to_remove = set()
+        ball_rect = ball.mask.get_rect(center=ball.center)
+        if not screen_rect.colliderect(ball_rect):
+            balls_to_remove.add(ball)
 
     for alien in aliens:
         alien.move()
-
-        balls_to_remove = set()
 
         for ball in balls:
             offset = (ball.center[0] - alien.rect.x, ball.center[1] - alien.rect.y)
@@ -72,8 +75,8 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
                 if alien.health <= 0:
                     aliens_to_remove.add(alien)
 
-        for ball in balls_to_remove:
-            balls.remove(ball)
+    for ball in balls_to_remove:
+        balls.remove(ball)
 
     for alien in aliens_to_remove:
         aliens.remove(alien)
