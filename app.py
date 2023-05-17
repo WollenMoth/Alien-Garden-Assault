@@ -20,6 +20,8 @@ from shared import BLACK, FPS, Background, Drawable
 TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
 
+CANNON_HEALTH = 20
+
 SPAWN_DELAY = 5000
 SPAWN_NUMBER = 4
 SPAWN_PROB = 0.5
@@ -65,6 +67,9 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
 
     for alien in aliens:
         alien.move()
+        if not screen_rect.colliderect(alien.rect):
+            cannon.receive_damage(math.ceil(alien.health))
+            aliens_to_remove.add(alien)
 
         for ball in balls:
             offset = (ball.center[0] - alien.rect.x, ball.center[1] - alien.rect.y)
@@ -137,7 +142,7 @@ def main() -> None:
 
     background = Background((TILE_SIZE, TILE_SIZE))
 
-    cannon = Cannon((0, HEIGHT // 2), 0)
+    cannon = Cannon((0, HEIGHT // 2), 0, CANNON_HEALTH)
 
     balls: list[Ball] = []
 

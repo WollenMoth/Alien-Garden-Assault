@@ -18,7 +18,7 @@ CANNON_HEIGHT = 80
 class Cannon(Drawable):
     """Representa el cañón que dispara bolas."""
 
-    def __init__(self, center: Coordinate, angle: float) -> None:
+    def __init__(self, center: Coordinate, angle: float, health: int) -> None:
         """Inicializa los atributos del objeto cañón.
 
         Args:
@@ -27,6 +27,7 @@ class Cannon(Drawable):
         """
         self.center = center
         self.angle = angle
+        self.health = health
         self.color = CANNON_COLOR
         self.radius = CANNON_RADIUS
         self.width = CANNON_WIDTH
@@ -63,3 +64,8 @@ class Cannon(Drawable):
         """Crea una nueva bola y la devuelve si hay bolas disponibles."""
         self.sounds["shoot"].play()
         return Ball(self.get_end(), self.angle)
+
+    def receive_damage(self, damage: int) -> None:
+        """Reduce la vida del cañón."""
+        self.health -= damage
+        self.sounds["damage"].play()
