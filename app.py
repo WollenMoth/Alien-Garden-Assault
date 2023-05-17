@@ -15,7 +15,7 @@ import random
 import pygame
 
 from models import Alien, Ball, Boss, Cannon, Knight, Pawn
-from shared import Background, Drawable, BLACK, FPS
+from shared import BLACK, FPS, Background, Drawable
 
 TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
@@ -58,8 +58,7 @@ def handle_movement(cannon: Cannon, balls: list[Ball], aliens: list[Alien]) -> N
         balls_to_remove = []
 
         for ball in balls:
-            offset = (ball.center[0] - alien.rect.x,
-                      ball.center[1] - alien.rect.y)
+            offset = (ball.center[0] - alien.rect.x, ball.center[1] - alien.rect.y)
             if alien.mask.overlap_area(ball.mask, offset):
                 alien.receive_damage()
                 balls_to_remove.append(ball)

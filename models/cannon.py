@@ -4,7 +4,8 @@ import math
 
 import pygame
 
-from shared import Coordinate, Drawable, YELLOW, ORANGE
+from shared import ORANGE, YELLOW, Coordinate, Drawable
+
 from .ball import Ball
 
 CANNON_COLOR = YELLOW
@@ -38,8 +39,10 @@ class Cannon(Drawable):
         Returns:
             Coordinate: Coordenadas (x, y) del extremo del cañón.
         """
-        return (int(self.center[0] + self.height * math.cos(self.angle)),
-                int(self.center[1] + self.height * math.sin(self.angle)))
+        return (
+            int(self.center[0] + self.height * math.cos(self.angle)),
+            int(self.center[1] + self.height * math.sin(self.angle)),
+        )
 
     def draw(self, screen: pygame.Surface) -> None:
         """Dibuja el cañón en la pantalla."""

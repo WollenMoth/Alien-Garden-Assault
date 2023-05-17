@@ -1,7 +1,9 @@
 """Módulo que contiene la clase Alien"""
 
 import random
+
 from shared import Animated, Coordinate
+
 
 class Alien(Animated):
     """Clase que representa un alien"""
@@ -12,7 +14,7 @@ class Alien(Animated):
         health: int,
         directory,
         size: Coordinate,
-        scale: int = 3
+        scale: int = 3,
     ):
         """Inicializa la clase Alien"""
         super().__init__(center, directory, size, fps=8, scale=scale)

@@ -1,6 +1,7 @@
 """Módulo que contiene la clase Boss"""
 
 from shared import Coordinate
+
 from .alien import Alien
 
 SPRITE_SIZE = (32, 32)

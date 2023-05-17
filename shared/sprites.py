@@ -1,7 +1,7 @@
 """Módulo para cargar los sprites"""
 
 from os import listdir
-from os.path import join, isfile
+from os.path import isfile, join
 
 import pygame
 

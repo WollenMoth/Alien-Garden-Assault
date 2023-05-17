@@ -1,9 +1,11 @@
 """Módulo que contiene la clase Knight"""
 
 from shared import Coordinate
+
 from .alien import Alien
 
 SPRITE_SIZE = (16, 16)
+
 
 class Knight(Alien):
     """Clase que representa un Knight"""

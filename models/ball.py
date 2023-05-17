@@ -4,7 +4,7 @@ import math
 
 import pygame
 
-from shared import Coordinate, Drawable, WHITE
+from shared import WHITE, Coordinate, Drawable
 
 BALL_COLOR = WHITE
 BALL_RADIUS = 10
