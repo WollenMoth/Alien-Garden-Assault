@@ -4,7 +4,7 @@ import random
 
 from shared import Animated, Coordinate, load_sounds
 
-from .stats import Stats
+from .alien_stats import AlienStats
 
 
 class Alien(Animated):
@@ -13,7 +13,7 @@ class Alien(Animated):
     def __init__(
         self,
         center: Coordinate,
-        stats: Stats,
+        stats: AlienStats,
         directory,
         size: Coordinate,
         scale: int = 3,

@@ -14,22 +14,13 @@ import random
 
 import pygame
 
-from models import Alien, Ball, Boss, Cannon, Knight, Pawn, Stats
+from models import Alien, AlienStats, Ball, Boss, Cannon, GameStats, Knight, Pawn
 from shared import BLACK, FPS, Background, Drawable
 
 TILE_SIZE = 96
 WIDTH, HEIGHT = TILE_SIZE * 15, TILE_SIZE * 8
 
 CANNON_HEALTH = 20
-
-SPAWN_DELAY = 5000
-SPAWN_NUMBER = 4
-SPAWN_PROB = 0.5
-TYPES = {
-    Pawn: Stats(1, 3, 0.6),
-    Knight: Stats(3, 2, 0.3),
-    Boss: Stats(5, 1, 0.1),
-}
 
 pygame.init()
 
@@ -97,41 +88,46 @@ def handle_shooting(cannon: Cannon, balls: list[Ball], last_pressed: bool) -> bo
     return pressed
 
 
-def generate_aliens() -> list[Alien]:
+def generate_aliens(game_stats: GameStats) -> list[Alien]:
     """Genera una oleada de aliens aleatorios al final del jardín"""
-    types = list(TYPES.keys())
-    types_prob = [TYPES[t].prob for t in types]
+    types = game_stats.types
+    types_classes = list(types.keys())
+    types_prob = [types[t].prob for t in types]
 
-    selection = random.choices(types, types_prob, k=HEIGHT // TILE_SIZE)
+    selection = random.choices(types_classes, types_prob, k=HEIGHT // TILE_SIZE)
 
     x = WIDTH - TILE_SIZE // 2
     y = TILE_SIZE // 2
 
     return [
-        t((x, y + i * TILE_SIZE), TYPES[t])
+        t((x, y + i * TILE_SIZE), types[t])
         for i, t in enumerate(selection)
-        if random.random() < SPAWN_PROB
+        if random.random() < game_stats.spawn_prob
     ]
 
 
-def start_round() -> None:
+def start_round(game_stats: GameStats) -> None:
     """Comienza una nueva ronda"""
-    pygame.time.set_timer(pygame.USEREVENT, SPAWN_DELAY, SPAWN_NUMBER)
-    pygame.time.set_timer(pygame.USEREVENT + 1, SPAWN_DELAY * SPAWN_NUMBER)
+    spawn_delay = game_stats.spawn_delay
+    spawn_number = game_stats.spawn_number
+    pygame.time.set_timer(pygame.USEREVENT, spawn_delay, spawn_number)
+    pygame.time.set_timer(pygame.USEREVENT + 1, spawn_delay * spawn_number)
 
 
-def increase_difficulty() -> None:
+def increase_difficulty(game_stats: GameStats) -> None:
     """Aumenta la dificultad del juego"""
-    globals()["SPAWN_DELAY"] = max(500, SPAWN_DELAY - 100)
-    globals()["SPAWN_NUMBER"] = min(50, SPAWN_NUMBER + 1)
-    globals()["SPAWN_PROB"] = min(1, SPAWN_PROB + 0.05)
+    game_stats.spawn_delay = max(500, game_stats.spawn_delay - 100)
+    game_stats.spawn_number = min(50, game_stats.spawn_number + 1)
+    game_stats.spawn_prob = min(1, game_stats.spawn_prob + 0.05)
 
-    for stats in TYPES.values():
+    types = game_stats.types
+
+    for stats in types.values():
         stats.health = min(100, stats.health * 1.1)
         stats.speed = min(10, stats.speed * 1.1)
         stats.prob = max(0.05, stats.prob - 0.02)
 
-    TYPES[Boss].prob = 1 - sum(s.prob for t, s in TYPES.items() if t != Boss)
+    types[Boss].prob = 1 - sum(s.prob for t, s in types.items() if t != Boss)
 
 
 def main() -> None:
@@ -140,17 +136,28 @@ def main() -> None:
 
     clock = pygame.time.Clock()
 
+    game_stats = GameStats(
+        5000,
+        4,
+        0.5,
+        {
+            Pawn: AlienStats(1, 3, 0.6),
+            Knight: AlienStats(3, 2, 0.3),
+            Boss: AlienStats(5, 1, 0.1),
+        },
+    )
+
     background = Background((TILE_SIZE, TILE_SIZE))
 
     cannon = Cannon((0, HEIGHT // 2), 0, CANNON_HEALTH)
 
     balls: list[Ball] = []
 
-    aliens = generate_aliens()
+    aliens = generate_aliens(game_stats)
 
     last_pressed = False
 
-    start_round()
+    start_round(game_stats)
     spawns_finished = False
 
     while running:
@@ -163,13 +170,13 @@ def main() -> None:
         last_pressed = handle_shooting(cannon, balls, last_pressed)
 
         if spawns_finished and not aliens:
-            increase_difficulty()
-            start_round()
+            increase_difficulty(game_stats)
+            start_round(game_stats)
             spawns_finished = False
 
         for event in pygame.event.get():
             if event.type == pygame.USEREVENT:
-                aliens.extend(generate_aliens())
+                aliens.extend(generate_aliens(game_stats))
             elif event.type == pygame.USEREVENT + 1:
                 spawns_finished = True
             elif event.type == pygame.QUIT:
