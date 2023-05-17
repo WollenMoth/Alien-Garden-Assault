@@ -102,17 +102,11 @@ def generate_aliens() -> list[Alien]:
     x = WIDTH - TILE_SIZE // 2
     y = TILE_SIZE // 2
 
-    aliens = []
-
-    for i, alien_type in enumerate(selection):
-        if random.random() > SPAWN_PROB:
-            continue
-
-        center = (x, y + i * TILE_SIZE)
-
-        aliens.append(alien_type(center, TYPES[alien_type]))
-
-    return aliens
+    return [
+        t((x, y + i * TILE_SIZE), TYPES[t])
+        for i, t in enumerate(selection)
+        if random.random() < SPAWN_PROB
+    ]
 
 
 def start_round() -> None:
