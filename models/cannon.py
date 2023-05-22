@@ -7,6 +7,7 @@ import pygame
 from shared import LIGHT_ORANGE, ORANGE, Coordinate, Drawable, load_sounds
 
 from .ball import Ball
+from .health_bar import HealthBar
 
 CANNON_COLOR = LIGHT_ORANGE
 LINE_COLOR = ORANGE
@@ -28,6 +29,7 @@ class Cannon(Drawable):
         self.center = center
         self.angle = angle
         self.health = health
+        self.health_bar = HealthBar(self, pygame.Rect(8, 8, 224, 32))
         self.color = CANNON_COLOR
         self.radius = CANNON_RADIUS
         self.width = CANNON_WIDTH
@@ -51,6 +53,7 @@ class Cannon(Drawable):
         end = self.get_end()
         pygame.draw.line(screen, self.line_color, self.center, end, self.width)
         pygame.draw.circle(screen, self.color, self.center, self.radius)
+        self.health_bar.draw(screen, always_draw=True)
 
     def move(self, angle: float) -> None:
         """Mueve el cañón a una nueva posición en función del ángulo dado.
@@ -68,4 +71,5 @@ class Cannon(Drawable):
     def receive_damage(self, damage: int) -> None:
         """Reduce la vida del cañón."""
         self.health -= damage
+        self.health_bar.update()
         self.sounds["damage"].play()
