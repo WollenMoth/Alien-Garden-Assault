@@ -130,8 +130,8 @@ def increase_difficulty(game_stats: GameStats) -> None:
     types[Boss].prob = 1 - sum(s.prob for t, s in types.items() if t != Boss)
 
 
-def main() -> None:
-    """Función principal del juego"""
+def game() -> bool:
+    """Función que ejecuta el juego"""
     running = True
 
     clock = pygame.time.Clock()
@@ -160,7 +160,7 @@ def main() -> None:
     start_round(game_stats)
     spawns_finished = False
 
-    while running:
+    while running and cannon.health > 0:
         clock.tick(FPS)
 
         draw([background, cannon, *balls, *aliens])
@@ -182,6 +182,16 @@ def main() -> None:
             elif event.type == pygame.QUIT:
                 running = False
                 break
+
+    return running
+
+
+def main() -> None:
+    """Función principal del juego"""
+    running = True
+
+    while running:
+        running = game()
 
     pygame.quit()
 
