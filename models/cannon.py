@@ -4,11 +4,11 @@ import math
 
 import pygame
 
-from shared import ORANGE, YELLOW, Coordinate, Drawable, load_sounds
+from shared import LIGHT_ORANGE, ORANGE, Coordinate, Drawable, load_sounds
 
 from .ball import Ball
 
-CANNON_COLOR = YELLOW
+CANNON_COLOR = LIGHT_ORANGE
 LINE_COLOR = ORANGE
 CANNON_RADIUS = 50
 CANNON_WIDTH = 20
